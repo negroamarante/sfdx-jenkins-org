@@ -24,7 +24,7 @@ node {
     }
 
 	stage('Test sfdx') {
-		rc = sh returnStatus: true, script: "${toolbelt} --version"
+		rc = sh returnStatus: true, script: "sfdx --version"
 	}
 
     withCredentials([file(credentialsId: JWT_KEY_FILE, variable: 'jwt_key_file')]) {
