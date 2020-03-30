@@ -8,7 +8,7 @@ node {
 
     def HUB_ORG=env.HUB_ORG
     def SFDC_HOST = env.SFDC_HOST_DH
-    def JWT_KEY_CRED_ID = env.JWT_CRED_ID_DH
+    def JWT_KEY_FILE = env.JWT_KEY_FILE
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY
 
     // println 'KEY IS' 
@@ -22,6 +22,10 @@ node {
         // when running in multi-branch job, one must issue this command
         checkout scm
     }
+
+	stage('Test sfdx') {
+		rc = sh returnStatus: true, script: "${toolbelt} --version"
+	}
 
     withCredentials([file(credentialsId: JWT_KEY_FILE, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
