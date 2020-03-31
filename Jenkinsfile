@@ -8,7 +8,7 @@ node {
 
     def DEV_HUB = env.SF_USERNAME
     def CONNECTED_APP_CONSUMER_KEY = env.SF_CONSUMER_KEY
-    def JWT_KEY_FILE = env.SERVER_KEY_CREDENTIALS_ID
+    def SERVER_KEY_CREDENTIALS_ID = env.SERVER_KEY_CREDENTIALS_ID
 
     def toolbelt = tool 'toolbelt'
 
@@ -18,11 +18,11 @@ node {
     }
 
 	stage('Test sfdx') {
-		rc = sh returnStatus: true, script: "${toolbelt}/sfdx --version"
+		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:org:list --all"
 		println rc
 	}
 
-    withCredentials([file(credentialsId: JWT_KEY_FILE, variable: 'jwt_key_file')]) {
+    withCredentials([file(credentialsId: SERVER_KEY_CREDENTIALS_ID, variable: 'jwt_key_file')]) {
         stage('Authorize to Salesforce') {
 		    println CONNECTED_APP_CONSUMER_KEY
 		    println DEV_HUB
