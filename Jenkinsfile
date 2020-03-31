@@ -20,7 +20,7 @@ node {
     }
 
     println 'KEY IS' 
-    println $JWT_KEY_FILE
+    println env
     println $HUB_ORG
     println SFDC_HOST
     println $CONNECTED_APP_CONSUMER_KEY
