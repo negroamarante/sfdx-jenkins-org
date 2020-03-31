@@ -8,7 +8,7 @@ node {
 
     def HUB_ORG=env.HUB_ORG
     def SFDC_HOST = 'https://login.salesforce.com'
-    def JWT_KEY_FILE = env.JWT_KEY_FILE
+    // def JWT_KEY_FILE = env.JWT_KEY_FILE
     def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY
 
     def toolbelt = tool 'toolbelt'
@@ -20,7 +20,7 @@ node {
     }
 
     println 'KEY IS' 
-    println env
+    println JWT_KEY_FILE
     println $HUB_ORG
     println SFDC_HOST
     println $CONNECTED_APP_CONSUMER_KEY
