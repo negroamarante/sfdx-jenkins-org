@@ -35,6 +35,9 @@ node {
 	stage('Test sfdx') {
 		rc = sh returnStatus: true, script: "${toolbelt}/sfdx --version"
 		println rc
+
+		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:org:list --all"
+		println rc
 	}
 
     withCredentials([file(credentialsId: $CONNECTED_APP_CONSUMER_KEY, variable: 'jwt_key_file')]) {
