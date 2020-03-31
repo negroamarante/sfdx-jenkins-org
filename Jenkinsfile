@@ -22,7 +22,7 @@ node {
     println JWT_KEY_FILE
     println HUB_ORG
     println SFDC_HOST
-    println CONNECTED_APP_CONSUMER_KEY
+    println $CONNECTED_APP_CONSUMER_KEY
 
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
@@ -34,7 +34,7 @@ node {
 		println rc
 	}
 
-    withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
+    withCredentials([file(credentialsId: $CONNECTED_APP_CONSUMER_KEY, variable: 'jwt_key_file')]) {
         stage('Create Scratch Org') {
 
             rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
