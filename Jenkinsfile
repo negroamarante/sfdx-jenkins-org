@@ -6,26 +6,15 @@ node {
     def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
     def SFDC_USERNAME
 
-    def HUB_ORG=env.HUB_ORG
+    // def HUB_ORG=env.HUB_ORG
     def SFDC_HOST = 'https://login.salesforce.com'
     // def JWT_KEY_FILE = env.JWT_KEY_FILE
-    def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY
+    // def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY
 
     def toolbelt = tool 'toolbelt'
 
-	// stage('set variables') {
-	// 	environment {
-	// 		JWT_KEY_FILE = credentials('JWT_KEY_FILE')
-	// 		CONNECTED_APP_CONSUMER_KEY = credentials('CONNECTED_APP_CONSUMER_KEY')
-	// 		HUB_ORG = credentials('HUB_ORG')
-	// 	}
-	// }
-
-    // println 'KEY IS' 
-    // println JWT_KEY_FILE
-    // println $HUB_ORG
-    // println SFDC_HOST
-    // println $CONNECTED_APP_CONSUMER_KEY
+	// def properties = readProperties file: 'job.properties'
+    // applyPropertiesToEnv(properties)
 
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
@@ -35,15 +24,12 @@ node {
 	stage('Test sfdx') {
 		rc = sh returnStatus: true, script: "${toolbelt}/sfdx --version"
 		println rc
-
-		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:org:list --all"
-		println rc
 	}
 
     withCredentials([file(credentialsId: $CONNECTED_APP_CONSUMER_KEY, variable: 'jwt_key_file')]) {
         stage('Create Scratch Org') {
 
-            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername "
             if (rc != 0) { error 'hub org authorization failed' }
 
             // need to pull out assigned username
