@@ -26,7 +26,7 @@ node {
 		    println CONNECTED_APP_CONSUMER_KEY
 		    println DEV_HUB
 
-			rc = command "${toolbelt}/sfdx force:auth:jwt:grant --clientid CONNECTED_APP_CONSUMER_KEY --jwtkeyfile ${jwt_key_file} --username DEV_HUB "
+			rc = command "${toolbelt}/sfdx force:auth:jwt:grant --clientid $CONNECTED_APP_CONSUMER_KEY --jwtkeyfile ${jwt_key_file} --username $DEV_HUB "
 		    if (rc != 0) {
 			    error 'Salesforce org authorization failed.'
 		    }
