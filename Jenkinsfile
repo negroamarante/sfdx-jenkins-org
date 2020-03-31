@@ -19,5 +19,14 @@ node {
 	stage('Test sfdx') {
 		rc = sh returnStatus: true, script: "${toolbelt}/sfdx --version"
 		println rc
-	}    
+	}
+
+    withCredentials([file(credentialsId: 'JWT_KEY_FILE', variable: 'jwt_key_file')]) {
+        stage('Authorize to Salesforce') {
+			rc = command "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --jwtkeyfile ${jwt_key_file} --username ${SF_USERNAME} "
+		    if (rc != 0) {
+			error 'Salesforce org authorization failed.'
+		    }
+		}
+    }
 }
