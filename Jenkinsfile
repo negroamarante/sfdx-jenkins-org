@@ -6,15 +6,15 @@ node {
     def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
     def SFDC_USERNAME
 
-    // def HUB_ORG=env.HUB_ORG
-    def SFDC_HOST = 'https://login.salesforce.com'
+    def DEV_HUB = env.SF_USERNAME
+    // def SFDC_HOST = 'https://login.salesforce.com'
     // def JWT_KEY_FILE = env.JWT_KEY_FILE
-    // def CONNECTED_APP_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY
+    def CONNECTED_APP_CONSUMER_KEY = env.SF_CONSUMER_KEY
+
+	printf DEV_HUB
+	printf CONNECTED_APP_CONSUMER_KEY
 
     def toolbelt = tool 'toolbelt'
-
-	// def properties = readProperties file: 'job.properties'
-    // applyPropertiesToEnv(properties)
 
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
@@ -29,7 +29,9 @@ node {
     withCredentials([file(credentialsId: 'JWT_KEY_FILE', variable: 'jwt_key_file')]) {
         stage('Create Scratch Org') {
 
-            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername "
+			println 'DEV_HUB'
+
+            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${DEV_HUB} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername "
             if (rc != 0) { error 'hub org authorization failed' }
 
             // need to pull out assigned username
