@@ -27,21 +27,28 @@ node {
 	}
 
     withCredentials([file(credentialsId: 'JWT_KEY_FILE', variable: 'jwt_key_file')]) {
-        stage('Create Scratch Org') {
+        stage('Authorize to Salesforce') {
+			rc = command "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --jwtkeyfile ${jwt_key_file} --username ${SF_USERNAME} "
+		    if (rc != 0) {
+			error 'Salesforce org authorization failed.'
+		    }
+		}
+        
+        // stage('Create Scratch Org') {
 
-            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${DEV_HUB} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername "
-            if (rc != 0) { error 'hub org authorization failed' }
+        //     rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${DEV_HUB} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername "
+        //     if (rc != 0) { error 'hub org authorization failed' }
 
-            // need to pull out assigned username
-            rmsg = sh returnStdout: true, script: "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --json --setdefaultusername"
-            printf rmsg
-            def jsonSlurper = new JsonSlurperClassic()
-            def robj = jsonSlurper.parseText(rmsg)
-            if (robj.status != 0) { error 'org creation failed: ' + robj.message }
-            SFDC_USERNAME=robj.result.username
-            robj = null
+        //     // need to pull out assigned username
+        //     rmsg = sh returnStdout: true, script: "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --json --setdefaultusername"
+        //     printf rmsg
+        //     def jsonSlurper = new JsonSlurperClassic()
+        //     def robj = jsonSlurper.parseText(rmsg)
+        //     if (robj.status != 0) { error 'org creation failed: ' + robj.message }
+        //     SFDC_USERNAME=robj.result.username
+        //     robj = null
 
-        }
+        // }
 
         stage('Push To Test Org') {
             rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
