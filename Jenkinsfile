@@ -13,11 +13,13 @@ node {
 
     def toolbelt = tool 'toolbelt'
 
-	environment {
-        JWT_KEY_FILE = credentials('JWT_KEY_FILE')
-        CONNECTED_APP_CONSUMER_KEY = credentials('CONNECTED_APP_CONSUMER_KEY')
-        HUB_ORG = credentials('HUB_ORG')
-    }
+	stage('set variables') {
+		environment {
+			JWT_KEY_FILE = credentials('JWT_KEY_FILE')
+			CONNECTED_APP_CONSUMER_KEY = credentials('CONNECTED_APP_CONSUMER_KEY')
+			HUB_ORG = credentials('HUB_ORG')
+		}
+	}
 
     println 'KEY IS' 
     println JWT_KEY_FILE
