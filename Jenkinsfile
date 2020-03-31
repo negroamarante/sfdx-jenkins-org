@@ -30,10 +30,11 @@ node {
 		}
 
         stage('Create Scratch Org') {
-
-            // need to pull out assigned username
-            rmsg = sh returnStatus: true, script: "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --json --setdefaultusername"
-            printf rmsg
+            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:org:create --definitionfile config/project-scratch-def.json --setdefaultusername"
+            printf rc
+            if (rc != 0) {
+                error 'create scratch org error'
+            }
         }
 
         stage('Push To Scratch Org') {
