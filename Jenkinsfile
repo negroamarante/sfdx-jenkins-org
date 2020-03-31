@@ -16,11 +16,12 @@ node {
 	environment {
         JWT_KEY_FILE = credentials('JWT_KEY_FILE')
         CONNECTED_APP_CONSUMER_KEY = credentials('CONNECTED_APP_CONSUMER_KEY')
+        HUB_ORG = credentials('HUB_ORG')
     }
 
     println 'KEY IS' 
-    println JWT_KEY_FILE
-    println HUB_ORG
+    println $JWT_KEY_FILE
+    println $HUB_ORG
     println SFDC_HOST
     println $CONNECTED_APP_CONSUMER_KEY
 
