@@ -8,6 +8,7 @@ node {
 
     def DEV_HUB = env.SF_USERNAME
     def CONNECTED_APP_CONSUMER_KEY = env.SF_CONSUMER_KEY
+    def JWT_KEY_FILE = env.SERVER_KEY_CREDENTIALS_ID
 
     def toolbelt = tool 'toolbelt'
 
@@ -21,7 +22,7 @@ node {
 		println rc
 	}
 
-    withCredentials([file(credentialsId: 'JWT_KEY_FILE', variable: 'jwt_key_file')]) {
+    withCredentials([file(credentialsId: JWT_KEY_FILE, variable: 'jwt_key_file')]) {
         stage('Authorize to Salesforce') {
 		    println CONNECTED_APP_CONSUMER_KEY
 		    println DEV_HUB
