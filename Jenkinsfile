@@ -18,7 +18,10 @@ node {
     }
 
 	stage('Test sfdx') {
+        def PLAYGROUND = 'Playground'
 		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:org:list --all"
+		println rc
+		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:alias:set ${PLAYGROUND}=engineering@resourceful-moose-wlbshf.com"
 		println rc
 	}
 
