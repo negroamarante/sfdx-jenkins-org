@@ -24,7 +24,7 @@ node {
     }
 
 	stage('Test sfdx') {
-		rc = sh returnStatus: true, script: "sfdx --version"
+		rc = sh returnStatus: true, script: "${toolbelt} --version"
 		println rc
 	}
 
