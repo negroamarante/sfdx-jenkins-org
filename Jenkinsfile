@@ -18,11 +18,7 @@ node {
     }
 
 	stage('Test sfdx') {
-        def PLAYGROUND = 'Playground'
 		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:org:list --all"
-		println rc
-		rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:alias:set ${PLAYGROUND}=engineering@resourceful-moose-wlbshf.com"
-		println rc
 	}
 
     withCredentials([file(credentialsId: SERVER_KEY_CREDENTIALS_ID, variable: 'jwt_key_file')]) {
@@ -32,6 +28,7 @@ node {
 		    println jwt_key_file
 
 			rc = command "${toolbelt}/sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --jwtkeyfile ${SERVER_KEY_CREDENTIALS_ID} --username ${DEV_HUB} "
+		    println rc
 		    if (rc != 0) {
 			    error 'Salesforce org authorization failed.'
 		    }
