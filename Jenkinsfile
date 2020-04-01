@@ -17,9 +17,9 @@ node {
         checkout scm
     }
 
-	stage('sfdx version') {
-		rc = sh returnStatus: true, script: "${toolbelt}/sfdx --version"
-	}
+	// stage('sfdx version') {
+	// 	rc = sh returnStatus: true, script: "${toolbelt}/sfdx --version"
+	// }
 
     withCredentials([file(credentialsId: SERVER_KEY_CREDENTIALS_ID, variable: 'jwt_key_file')]) {
         stage('Authorize to Salesforce') {
@@ -48,7 +48,6 @@ node {
             sh "mkdir -p ${RUN_ARTIFACT_DIR}"
             timeout(time: 180, unit: 'SECONDS') {
                 rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat human "
-                println rc
                 if (rc != 0) {
                     echo 'run test failed'
                 }
