@@ -39,9 +39,25 @@ node {
 
         stage('Push To Scratch Org') {
             rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:source:push "
-            // rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:source:push --targetusername ${SFDC_USERNAME}"
             if (rc != 0) {
                 error 'push failed'
+            }
+        }
+
+        stage('Run test') {
+            sh "mkdir -p ${RUN_ARTIFACT_DIR}"
+            timeout(time: 120, unit: 'SECONDS') {
+                rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:source:push --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap --targetusername "
+                if (rc != 0) {
+                    error 'run test failed'
+                }
+            }
+        }
+
+        stage('Delete Scratch Org') {
+            rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:org:delete "
+            if (rc != 0) {
+                error 'delete failed'
             }
         }
     }
