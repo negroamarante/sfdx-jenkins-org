@@ -46,8 +46,9 @@ node {
 
         stage('Run test') {
             sh "mkdir -p ${RUN_ARTIFACT_DIR}"
-            timeout(time: 120, unit: 'SECONDS') {
-                rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap "
+            timeout(time: 180, unit: 'SECONDS') {
+                rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat human "
+                println rc
                 if (rc != 0) {
                     echo 'run test failed'
                 }
